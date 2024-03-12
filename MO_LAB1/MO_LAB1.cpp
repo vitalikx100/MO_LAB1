@@ -9,7 +9,7 @@ double func(double x)
 
 double fib(int n)
 {
-	if (n <= 1) return n;
+	if (n <= 1) return 1;
 	return fib(n - 1) + fib(n - 2);
 }
 
@@ -30,57 +30,89 @@ double dixotomia(double a, double b, double delta)
 		n+=2;
 	}
 
-	cout << a << " " << b << " " << (a+b)/2 << " "<< n<< " "<<(b-a)/2;
+	cout << a << " " << b << " " << (a + b) / 2 << " " << n << " " << (b - a) / 2 << endl;
 	return a, b, n;
 }
 
 double golden_ratio(double a, double b, double delta)
 {
-	double fi = (sqrt(5) - 1) / 2;
+	double fi = (1 + sqrt(5)) / 2;
+	double x_1 = b - (b - a) / fi;
+	double x_2 = a + (b - a) / fi;
 
-	double x_1 = a + (1 - fi) * (b - a);
-	double x_2 = a + fi * (b - a);
-
-	double func_1 = func(x_1);
-	double func_2 = func(x_2);
+	double f_x1 = func(x_1);
+	double f_x2 = func(x_2);
 
 	int n = 0;
 	while (abs(a - b) > 2 * delta)
 	{
-		double x_1 = a + (1 - fi) * (b - a);
-		double x_2 = a + fi * (b - a);
-
-
-
 		
+
+		if (f_x1 > f_x2)
+		{
+			a = x_1;
+			x_1 = x_2;
+			f_x1 = f_x2;
+			x_2 = b - (x_1 - a);
+			f_x2 = func(x_2);
+		}
+		if (f_x2 > f_x1)
+		{
+			b = x_2;
+			x_2 = x_1;
+			f_x2 = f_x1;
+			x_1 = a + (b - x_2);
+			f_x1 = func(x_1);
+		}
 
 		n++;
 	}
 	
-	cout << a << " " << b << " " << (a+b)/2<<" "<<n;
+	cout << a << " " << b << " " << (a + b) / 2 << " " << n <<" "<<(b - a) / 2 << endl;
 	return a, b, n;
 
 }
 
-double fib_method(double a, double b)
+double fib_method(double a, double b, double delta)
 {
-	int n;
-	cin >> n;
+	int n = 0;
 
-	double delta = (b - a) / fib(n);
+	while (fib(n) <= (b - a) / delta) {
+		n++;
+	}
+	int i = n;
 
-	while (abs(a - b) > delta)
+	
+	double x_1 = a + fib(n - 2) / fib(n) * (b - a);
+	double x_2 = a + fib(n - 1) / fib(n) * (b - a);
+
+	double f_x1 = func(x_1);
+	double f_x2 = func(x_2);
+	while (n > 1)
 	{
-		double x_1 = a + fib(n - 2) / fib(n) * (b - a);	
-		double x_2 = a + fib(n - 1) / fib(n) * (b - a);
-
-		if (func(x_1) > func(x_2)) a = x_1;
-		else b = x_2;
+		if (f_x1 > f_x2)
+		{
+			a = x_1;
+			x_1 = x_2;
+			f_x1 = f_x2;
+			x_2 = a + fib(n - 1) / fib(n) * (b - a);
+			f_x2 = func(x_2);
+		}
+		if (f_x2 > f_x1)
+		{
+			b = x_2;
+			x_2 = x_1;
+			f_x2 = f_x1;
+			x_1 = a + fib(n - 2) / fib(n) * (b - a);
+			f_x1 = func(x_1);
+		}
+		n--;
+		
 	}
 
-	cout << a <<" "<< b;
+	cout << a << " " << b << " " << (a + b) / 2 << " " << i;
 
-	return a< b, n;
+	return a< b, i;
 }
 
 
@@ -94,6 +126,6 @@ int main()
 
 	dixotomia(a, b, delta);
 	golden_ratio(a, b, delta);
-	//fib_method(a, b);
+	fib_method(a, b, delta);
 
 }
